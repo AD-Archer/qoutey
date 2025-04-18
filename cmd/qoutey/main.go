@@ -53,6 +53,10 @@ func main() {
 		return
 	}
 
+	// Send startup notification email
+	log.Println("Sending startup notification email...")
+	sendStartupNotification(config)
+
 	// Set up cron scheduler
 	c := cron.New(cron.WithLogger(cron.VerbosePrintfLogger(log.New(os.Stdout, "CRON: ", log.LstdFlags))))
 
@@ -233,4 +237,37 @@ func selectQuote(config *Config) string {
 	config.UsedQuotes = append(config.UsedQuotes, selectedQuote)
 
 	return selectedQuote
+}
+
+func sendStartupNotification(config *Config) {
+	// Format message
+	message := fmt.Sprintf("To: %s\r\n"+
+		"Subject: %s - Startup Notification\r\n"+
+		"Content-Type: text/plain; charset=utf-8\r\n"+
+		"\r\n"+
+		"Qoutey service has started successfully at %s.\r\n"+
+		"The quote service is running and scheduled for 7am, 12pm, and 7pm.\r\n",
+		config.Email.To[0],
+		config.Email.Subject,
+		time.Now().Format("2006-01-02 15:04:05"))
+
+	// Connect to SMTP server
+	auth := smtp.PlainAuth("", config.SMTP.Username, config.SMTP.Password, config.SMTP.Server)
+	smtpAddr := fmt.Sprintf("%s:%d", config.SMTP.Server, config.SMTP.Port)
+
+	// Send email
+	err := smtp.SendMail(
+		smtpAddr,
+		auth,
+		config.Email.From,
+		config.Email.To,
+		[]byte(message),
+	)
+
+	if err != nil {
+		log.Printf("Failed to send startup notification email: %v", err)
+		return
+	}
+
+	log.Printf("Successfully sent startup notification email")
 }

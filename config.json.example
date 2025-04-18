@@ -1,16 +1,16 @@
 {
   "smtp": {
-    "server": "smtp.example.com",
+    "server": "smtp.gmail.com",
     "port": 587,
-    "username": "your-email@example.com",
-    "password": "your-password"
+    "username": "example@gmail.com",
+    "password": "yoursmtppassword"
   },
   "email": {
     "from": "quotes@example.com",
     "to": [
-      "your-email@example.com"
+      "emaple@gmail.com"
     ],
-    "subject": "Your Daily Quote"
+    "subject": "Qoutey"
   },
   "quotes": [
     "The only way to do great work is to love what you do. - Steve Jobs",
@@ -22,7 +22,8 @@
     "You miss 100% of the shots you don't take. - Wayne Gretzky",
     "Whether you think you can or you think you can't, you're right. - Henry Ford",
     "The best way to predict the future is to create it. - Abraham Lincoln",
-    "It always seems impossible until it's done. - Nelson Mandela"
+    "It always seems impossible until it's done. - Nelson Mandela",
+    "Success usually comes to those who are too busy to be looking for it. - Henry David Thoreau"
   ],
   "usedQuotes": [],
   "maxRepetition": 5

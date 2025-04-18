@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"net/smtp"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/robfig/cron/v3"
@@ -25,6 +26,9 @@ type Config struct {
 		To      []string `json:"to"`
 		Subject string   `json:"subject"`
 	} `json:"email"`
+	Schedule struct {
+		Times []string `json:"times"`
+	} `json:"schedule"`
 	Quotes        []string `json:"quotes"`
 	UsedQuotes    []string `json:"usedQuotes"`
 	MaxRepetition int      `json:"maxRepetition"`
@@ -60,27 +64,38 @@ func main() {
 	// Set up cron scheduler
 	c := cron.New(cron.WithLogger(cron.VerbosePrintfLogger(log.New(os.Stdout, "CRON: ", log.LstdFlags))))
 
-	// Schedule emails at 7am, 12pm, and 7pm
-	c.AddFunc("0 7 * * *", func() {
-		log.Println("Scheduled task: Sending 7am quote")
-		sendQuote(config)
-	})
-	c.AddFunc("0 12 * * *", func() {
-		log.Println("Scheduled task: Sending 12pm quote")
-		sendQuote(config)
-	})
-	c.AddFunc("0 19 * * *", func() {
-		log.Println("Scheduled task: Sending 7pm quote")
-		sendQuote(config)
-	})
+	// Use the schedule times from config
+	for _, timeStr := range config.Schedule.Times {
+		// Convert time string (e.g. "7:00") to cron expression (e.g. "0 7 * * *")
+		parts := strings.Split(timeStr, ":")
+		if len(parts) != 2 {
+			log.Printf("Invalid time format: %s. Expected format: HH:MM", timeStr)
+			continue
+		}
+
+		hour := parts[0]
+		minute := parts[1]
+		cronExpression := fmt.Sprintf("%s %s * * *", minute, hour)
+
+		log.Printf("Setting up schedule: %s (cron: %s)", timeStr, cronExpression)
+
+		// Create a closure to capture the current timeStr value
+		scheduleTime := timeStr
+		c.AddFunc(cronExpression, func() {
+			log.Printf("Scheduled task: Sending quote at %s", scheduleTime)
+			sendQuote(config)
+		})
+	}
 
 	// Start the scheduler
 	c.Start()
 
-	fmt.Println("Quote emailer started. Running schedule at 7am, 12pm, and 7pm.")
+	// Create a readable representation of the schedule times
+	scheduleDisplay := strings.Join(config.Schedule.Times, ", ")
+	fmt.Printf("Quote emailer started. Running schedule at: %s\n", scheduleDisplay)
 	fmt.Println("Application is running in the foreground. Keep this terminal window open.")
 	fmt.Println("Check logs at ./qoutey.log")
-	log.Println("Quote emailer started. Running schedule at 7am, 12pm, and 7pm.")
+	log.Printf("Quote emailer started. Running schedule at: %s", scheduleDisplay)
 
 	// Keep the application running
 	select {}
@@ -126,6 +141,11 @@ func loadConfig(filename string) (*Config, error) {
 				From:    "quotes@example.com",
 				To:      []string{"your-email@example.com"},
 				Subject: "Your Daily Quote",
+			},
+			Schedule: struct {
+				Times []string `json:"times"`
+			}{
+				Times: []string{"0 7 * * *", "0 12 * * *", "0 19 * * *"},
 			},
 			Quotes: []string{
 				"The only way to do great work is to love what you do. - Steve Jobs",

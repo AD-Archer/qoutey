@@ -12,6 +12,9 @@
     ],
     "subject": "Qoutey"
   },
+  "schedule": {
+    "times": ["7:00", "12:00", "19:00"]
+  },
   "quotes": [
     "The only way to do great work is to love what you do. - Steve Jobs",
     "Life is what happens when you're busy making other plans. - John Lennon",

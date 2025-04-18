@@ -33,9 +33,9 @@ type Config struct {
 func main() {
 	// Set up logging to file
 	setupLogging()
-	
+
 	log.Println("Starting Quote Emailer application")
-	
+
 	// Load configuration
 	config, err := loadConfig("config.json")
 	if err != nil {
@@ -57,17 +57,17 @@ func main() {
 	c := cron.New(cron.WithLogger(cron.VerbosePrintfLogger(log.New(os.Stdout, "CRON: ", log.LstdFlags))))
 
 	// Schedule emails at 7am, 12pm, and 7pm
-	c.AddFunc("0 7 * * *", func() { 
+	c.AddFunc("0 7 * * *", func() {
 		log.Println("Scheduled task: Sending 7am quote")
-		sendQuote(config) 
+		sendQuote(config)
 	})
-	c.AddFunc("0 12 * * *", func() { 
-		log.Println("Scheduled task: Sending 12pm quote") 
-		sendQuote(config) 
+	c.AddFunc("0 12 * * *", func() {
+		log.Println("Scheduled task: Sending 12pm quote")
+		sendQuote(config)
 	})
-	c.AddFunc("0 19 * * *", func() { 
+	c.AddFunc("0 19 * * *", func() {
 		log.Println("Scheduled task: Sending 7pm quote")
-		sendQuote(config) 
+		sendQuote(config)
 	})
 
 	// Start the scheduler
@@ -88,12 +88,12 @@ func setupLogging() {
 	if err != nil {
 		log.Fatalf("Failed to open log file: %v", err)
 	}
-	
+
 	// Set log output to both file and console
 	log.SetOutput(os.Stdout)
 	mw := io.MultiWriter(os.Stdout, logFile)
 	log.SetOutput(mw)
-	
+
 	// Set log flags
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 }

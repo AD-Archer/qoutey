@@ -1,0 +1,29 @@
+{
+  "smtp": {
+    "server": "smtp.example.com",
+    "port": 587,
+    "username": "your-email@example.com",
+    "password": "your-password"
+  },
+  "email": {
+    "from": "quotes@example.com",
+    "to": [
+      "your-email@example.com"
+    ],
+    "subject": "Your Daily Quote"
+  },
+  "quotes": [
+    "The only way to do great work is to love what you do. - Steve Jobs",
+    "Life is what happens when you're busy making other plans. - John Lennon",
+    "The future belongs to those who believe in the beauty of their dreams. - Eleanor Roosevelt",
+    "Success is not final, failure is not fatal: It is the courage to continue that counts. - Winston Churchill",
+    "Believe you can and you're halfway there. - Theodore Roosevelt",
+    "Don't watch the clock; do what it does. Keep going. - Sam Levenson",
+    "You miss 100% of the shots you don't take. - Wayne Gretzky",
+    "Whether you think you can or you think you can't, you're right. - Henry Ford",
+    "The best way to predict the future is to create it. - Abraham Lincoln",
+    "It always seems impossible until it's done. - Nelson Mandela"
+  ],
+  "usedQuotes": [],
+  "maxRepetition": 5
+}

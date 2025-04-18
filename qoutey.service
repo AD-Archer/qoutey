@@ -1,0 +1,16 @@
+[Unit]
+Description=Qoutey - Daily Quote Emailer
+After=network.target
+
+[Service]
+ExecStart=/Users/archer/projects/qoutey/qoutey
+WorkingDirectory=/Users/archer/projects/qoutey
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=qoutey
+User=archer
+
+[Install]
+WantedBy=multi-user.target
